@@ -47,7 +47,8 @@ def compute_rsi(close: pd.Series, period: int = 14) -> pd.Series:
 
 def analyze_one(code: str, name: str, start: str, end: str,
                  lookback: int, rebound_days: int,
-                 rebound_pct: float) -> Optional[Dict]:
+                 rebound_pct_min: float, rebound_pct_max: float,
+                 min_days_since_low: int, max_days_since_low: int) -> Optional[Dict]:
     df = stock.get_market_ohlcv(start, end, code)
     if df is None or len(df) < lookback + 5:
         return None
@@ -56,17 +57,19 @@ def analyze_one(code: str, name: str, start: str, end: str,
     close = df["close"]
 
     window = close.iloc[-lookback:]
-    low_price = window.min()
-    low_date = window.idxmin()
+    low_pos = int(np.argmin(window.values))          # 저점의 거래일 위치
+    low_price = window.iloc[low_pos]
+    low_date = window.index[low_pos]
     last_price = close.iloc[-1]
     last_date = close.index[-1]
 
-    days_since_low = (last_date - low_date).days
-    if days_since_low < 3:
+    # 거래일(영업일) 기준 경과일 - 캘린더 일수가 아닌 실제 거래일 수
+    trading_days_since_low = (len(window) - 1) - low_pos
+    if trading_days_since_low < min_days_since_low or trading_days_since_low > max_days_since_low:
         return None
 
     pct_from_low = (last_price - low_price) / low_price * 100
-    if pct_from_low < rebound_pct:
+    if pct_from_low < rebound_pct_min or pct_from_low > rebound_pct_max:
         return None
 
     ma5 = close.rolling(5).mean()
@@ -90,6 +93,12 @@ def analyze_one(code: str, name: str, start: str, end: str,
     score += 20 if rsi_recovering else 0
     score += 10 if volume_up else 0
 
+    # 차트용 가격 히스토리 (저점 탐색 구간과 동일 범위)
+    history = [
+        {"date": d.strftime("%Y-%m-%d"), "close": int(v)}
+        for d, v in window.items()
+    ]
+
     return {
         "code": code,
         "name": name,
@@ -97,6 +106,7 @@ def analyze_one(code: str, name: str, start: str, end: str,
         "low_price": int(low_price),
         "last_price": int(last_price),
         "pct_from_low": round(pct_from_low, 1),
+        "history": history,
         "golden_cross": golden_cross,
         "rsi_now": round(rsi_now, 1) if pd.notna(rsi_now) else None,
         "rsi_recovering": rsi_recovering,
@@ -110,7 +120,10 @@ def main():
     parser.add_argument("--top", type=int, default=100)
     parser.add_argument("--lookback", type=int, default=60)
     parser.add_argument("--rebound-days", type=int, default=10)
-    parser.add_argument("--rebound-pct", type=float, default=5.0)
+    parser.add_argument("--rebound-pct-min", type=float, default=3.0, help="저점 대비 최소 반등률(%)")
+    parser.add_argument("--rebound-pct-max", type=float, default=8.0, help="저점 대비 최대 반등률(%) - 이미 많이 오른 종목 제외")
+    parser.add_argument("--min-days-since-low", type=int, default=2, help="저점 이후 최소 경과 거래일")
+    parser.add_argument("--max-days-since-low", type=int, default=5, help="저점 이후 최대 경과 거래일 - '초기' 반등만 포착")
     parser.add_argument("--min-score", type=float, default=40.0)
     parser.add_argument("--out", type=str, default=None, help="CSV로도 저장하려면 파일명 지정")
     parser.add_argument("--json-out", type=str, default="data/results.json", help="JSON 결과 파일 경로")
@@ -130,7 +143,9 @@ def main():
         try:
             res = analyze_one(
                 row["code"], row["name"], start, end,
-                args.lookback, args.rebound_days, args.rebound_pct,
+                args.lookback, args.rebound_days,
+                args.rebound_pct_min, args.rebound_pct_max,
+                args.min_days_since_low, args.max_days_since_low,
             )
             if res:
                 results.append(res)
@@ -155,7 +170,10 @@ def main():
             "top": args.top,
             "lookback": args.lookback,
             "rebound_days": args.rebound_days,
-            "rebound_pct": args.rebound_pct,
+            "rebound_pct_min": args.rebound_pct_min,
+            "rebound_pct_max": args.rebound_pct_max,
+            "min_days_since_low": args.min_days_since_low,
+            "max_days_since_low": args.max_days_since_low,
             "min_score": args.min_score,
         },
         "count": len(df_result),
