@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.debye_alt.twa",
+        "sha256_cert_fingerprints": ["B8:C4:B3:64:07:8A:50:D1:A8:D0:6D:9E:D8:29:C0:DF:F6:20:6C:FE:14:28:20:5B:59:17:CE:0A:E7:53:9F:59"]
+      }
+    }]
