@@ -32,7 +32,10 @@ jobs:
           python scanner.py \
             --top 100 \
             --lookback 60 \
-            --rebound-pct 5 \
+            --rebound-pct-min 3 \
+            --rebound-pct-max 8 \
+            --min-days-since-low 2 \
+            --max-days-since-low 5 \
             --min-score 40 \
             --json-out data/results.json
 
