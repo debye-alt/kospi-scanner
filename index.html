@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0e14" />
+<title>코스피 저점-반등 스캐너</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #11161f;
+    --surface-2: #161d28;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8ecf1;
+    --text-dim: #7c8794;
+    --up: #ff4d4d;
+    --up-dim: #45222a;
+    --down: #4d8dff;
+    --gold: #ffc93d;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  header.header {
+    position: relative;
+    overflow: hidden;
+    padding: 28px 20px 22px;
+    background:
+      radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/14px 14px,
+      var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sweep {
+    position: absolute;
+    top: -60%;
+    right: -40%;
+    width: 240px;
+    height: 240px;
+    background: conic-gradient(from 0deg, rgba(255,77,77,0.16), transparent 28%);
+    border-radius: 50%;
+    animation: spin 7s linear infinite;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) { .sweep { animation: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .eyebrow {
+    margin: 0 0 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--up);
+    font-weight: 600;
+  }
+  h1 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .meta {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .refresh-btn {
+    margin-top: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 7px;
+  }
+  .refresh-btn:active { background: var(--border); }
+
+  main { padding: 16px; max-width: 640px; margin: 0 auto; }
+
+  .status {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 60px 20px;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+  .status .glyph {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    color: var(--border);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  ol.list { list-style: none; margin: 0; padding: 0; }
+
+  .card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 9px;
+  }
+  .card.top {
+    border-color: rgba(255,201,61,0.4);
+    box-shadow: 0 0 0 1px rgba(255,201,61,0.12) inset;
+  }
+  .rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .card.top .rank { color: var(--gold); }
+
+  .id-block { min-width: 0; flex: 1; }
+  .name-row { display: flex; align-items: baseline; gap: 6px; }
+  .name { font-size: 14.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .code { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); }
+  .low-date { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); margin-top: 3px; }
+
+  .chips { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .chip.on { color: var(--up); border-color: rgba(255,77,77,0.35); background: rgba(255,77,77,0.07); }
+
+  .price-block { text-align: right; flex-shrink: 0; }
+  .last-price { font-size: 14.5px; font-weight: 600; }
+  .pct-up { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--up); }
+
+  .score-block { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 34px; flex-shrink: 0; }
+  .score-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); }
+  .card.top .score-num { color: var(--gold); }
+  .score-bar-bg { width: 6px; height: 46px; background: var(--surface-2); border-radius: 3px; overflow: hidden; display: flex; align-items: flex-end; }
+  .score-bar-fill { width: 100%; background: var(--up); border-radius: 3px; }
+  .card.top .score-bar-fill { background: var(--gold); }
+
+  footer.footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 24px 20px 40px;
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="sweep" aria-hidden="true"></div>
+  <div class="header-content">
+    <p class="eyebrow">KOSPI SIGNAL SCANNER</p>
+    <h1>저점-반등 스캐너</h1>
+    <p class="meta" id="meta-line">불러오는 중...</p>
+    <button class="refresh-btn mono" id="refresh-btn">⟳ 새로고침</button>
+  </div>
+</header>
+
+<main>
+  <div id="status" class="status" hidden></div>
+  <ol id="list" class="list"></ol>
+</main>
+
+<footer class="footer">
+  종가 기준 자동 분석 결과이며 매수·매도 추천이 아닙니다.<br />
+  실제 투자 결정은 추가 분석 후 본인 판단으로 하시기 바랍니다.
+</footer>
+
+<script>
+  const listEl = document.getElementById('list');
+  const statusEl = document.getElementById('status');
+  const metaEl = document.getElementById('meta-line');
+
+  function fmtNum(n) {
+    return n == null ? '-' : n.toLocaleString('ko-KR');
+  }
+
+  function fmtGeneratedAt(iso) {
+    if (!iso) return null;
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function showStatus(glyph, text) {
+    listEl.innerHTML = '';
+    statusEl.hidden = false;
+    statusEl.innerHTML = `<span class="glyph">${glyph}</span>${text}`;
+  }
+
+  function renderCard(item, index) {
+    const isTop = index === 0;
+    const chips = [
+      { on: item.golden_cross, label: 'GC 골든크로스' },
+      { on: item.rsi_recovering, label: 'RSI 회복' },
+      { on: item.volume_up, label: 'VOL 거래량↑' },
+    ].map(c => `<span class="chip ${c.on ? 'on' : ''}">${c.label}</span>`).join('');
+
+    const barHeight = Math.max(4, Math.round((item.score / 100) * 46));
+
+    return `
+      <li class="card ${isTop ? 'top' : ''}">
+        <span class="rank mono">${index + 1}</span>
+        <div class="id-block">
+          <div class="name-row">
+            <span class="name">${item.name}</span>
+            <span class="code mono">${item.code}</span>
+          </div>
+          <div class="low-date mono">저점 ${item.low_date}</div>
+          <div class="chips">${chips}</div>
+        </div>
+        <div class="price-block">
+          <div class="last-price mono">${fmtNum(item.last_price)}</div>
+          <div class="pct-up mono">▲ ${item.pct_from_low}%</div>
+        </div>
+        <div class="score-block">
+          <span class="score-num">${item.score}</span>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="height:${barHeight}px"></div></div>
+        </div>
+      </li>
+    `;
+  }
+
+  function render(data) {
+    const generated = fmtGeneratedAt(data.generated_at);
+
+    if (!data.generated_at) {
+      metaEl.textContent = '대기 중';
+      showStatus('···', '아직 첫 스캔이 실행되지 않았습니다.<br/>GitHub Actions에서 워크플로우를 한 번 실행해주세요.');
+      return;
+    }
+
+    metaEl.textContent = `기준 ${generated} · 상위 ${data.params?.top ?? '-'}종목 분석`;
+
+    const candidates = (data.candidates || []).slice().sort((a, b) => b.score - a.score);
+
+    if (candidates.length === 0) {
+      showStatus('○', '오늘은 조건에 맞는 저점-반등 신호가 없습니다.<br/>다음 스캔에서 다시 확인해보세요.');
+      return;
+    }
+
+    statusEl.hidden = true;
+    listEl.innerHTML = candidates.map(renderCard).join('');
+  }
+
+  async function load(force) {
+    try {
+      const url = './data/results.json' + (force ? ('?t=' + Date.now()) : '');
+      const res = await fetch(url, { cache: force ? 'no-store' : 'default' });
+      if (!res.ok) throw new Error('fetch failed: ' + res.status);
+      render(await res.json());
+    } catch (e) {
+      metaEl.textContent = '오류';
+      showStatus('!', '데이터를 불러오지 못했습니다.<br/>네트워크 연결을 확인 후 새로고침 해주세요.');
+    }
+  }
+
+  document.getElementById('refresh-btn').addEventListener('click', () => load(true));
+  load(false);
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+</script>
+
+</body>
+</html>
