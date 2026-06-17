@@ -1,4 +1,4 @@
-const CACHE_NAME = "kospi-scanner-v1";
+const CACHE_NAME = "kospi-scanner-v2";
 const CORE_ASSETS = [
   "./index.html",
   "./manifest.json",
@@ -22,25 +22,16 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// data/results.json은 네트워크 우선(최신 데이터), 실패 시 캐시로 폴백
-// 그 외 정적 자원은 캐시 우선
+// 항상 네트워크 우선: 최신 파일을 먼저 시도하고, 오프라인일 때만 캐시로 폴백
+// (이전 버전은 정적 자원을 캐시 우선으로 처리해서 배포 후에도 옛 파일이 계속 보이는 문제가 있었음)
 self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
-
-  if (url.pathname.endsWith("data/results.json")) {
-    event.respondWith(
-      fetch(event.request)
-        .then((res) => {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          return res;
-        })
-        .catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request, { cache: "no-store" })
+      .then((res) => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return res;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
