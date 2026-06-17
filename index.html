@@ -176,6 +176,39 @@
   .card { cursor: pointer; }
   .card:active { background: var(--surface-2); }
 
+  .filter-bar {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 14px 16px 2px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+  }
+  .filter-chip.active {
+    border-color: var(--up);
+    background: rgba(255,77,77,0.12);
+    color: var(--up);
+  }
+  .filter-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 8px 16px 0;
+    margin: 0;
+  }
+
   .overlay {
     position: fixed;
     inset: 0;
@@ -242,6 +275,13 @@
 </header>
 
 <main>
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-chip" data-preset="aggressive">적극적 (2~5일·3~8%)</button>
+    <button class="filter-chip" data-preset="standard">표준 (3~10일·5~15%)</button>
+    <button class="filter-chip" data-preset="loose">느슨 (1~15일·3~20%)</button>
+    <button class="filter-chip" data-preset="all">전체보기</button>
+  </div>
+  <p class="filter-count mono" id="filter-count"></p>
   <div id="status" class="status" hidden></div>
   <ol id="list" class="list"></ol>
 </main>
@@ -325,27 +365,61 @@
     `;
   }
 
+  const PRESETS = {
+    aggressive: { label: '적극적', minDays: 2, maxDays: 5, minPct: 3, maxPct: 8 },
+    standard:   { label: '표준',   minDays: 3, maxDays: 10, minPct: 5, maxPct: 15 },
+    loose:      { label: '느슨',   minDays: 1, maxDays: 15, minPct: 3, maxPct: 20 },
+    all:        { label: '전체',   minDays: 0, maxDays: 9999, minPct: 0, maxPct: 9999 },
+  };
+  let activePreset = 'aggressive';
+  let allCandidates = [];
+  const filterCountEl = document.getElementById('filter-count');
+
+  function applyFilter(key) {
+    activePreset = key;
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.preset === key);
+    });
+
+    const p = PRESETS[key];
+    currentCandidates = allCandidates
+      .filter(c => c.days_since_low >= p.minDays && c.days_since_low <= p.maxDays
+                 && c.pct_from_low >= p.minPct && c.pct_from_low <= p.maxPct)
+      .sort((a, b) => b.score - a.score);
+
+    filterCountEl.textContent = `'${p.label}' 기준 · ${currentCandidates.length}종목`;
+
+    if (currentCandidates.length === 0) {
+      showStatus('○', `'${p.label}' 기준에 맞는 종목이 없습니다.<br/>다른 기준을 선택해보세요.`);
+      return;
+    }
+    statusEl.hidden = true;
+    listEl.innerHTML = currentCandidates.map(renderCard).join('');
+  }
+
+  document.getElementById('filter-bar').addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-chip');
+    if (btn) applyFilter(btn.dataset.preset);
+  });
+
   function render(data) {
     const generated = fmtGeneratedAt(data.generated_at);
 
     if (!data.generated_at) {
       metaEl.textContent = '대기 중';
+      document.getElementById('filter-bar').hidden = true;
+      filterCountEl.textContent = '';
       showStatus('···', '아직 첫 스캔이 실행되지 않았습니다.<br/>GitHub Actions에서 워크플로우를 한 번 실행해주세요.');
+      allCandidates = [];
       currentCandidates = [];
       return;
     }
 
+    document.getElementById('filter-bar').hidden = false;
     metaEl.textContent = `기준 ${generated} · 상위 ${data.params?.top ?? '-'}종목 분석`;
 
-    currentCandidates = (data.candidates || []).slice().sort((a, b) => b.score - a.score);
-
-    if (currentCandidates.length === 0) {
-      showStatus('○', '오늘은 조건에 맞는 저점-반등 신호가 없습니다.<br/>다음 스캔에서 다시 확인해보세요.');
-      return;
-    }
-
-    statusEl.hidden = true;
-    listEl.innerHTML = currentCandidates.map(renderCard).join('');
+    allCandidates = (data.candidates || []).slice();
+    applyFilter(activePreset);
   }
 
   // ---- 상세 차트 시트 ----

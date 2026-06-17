@@ -46,9 +46,7 @@ def compute_rsi(close: pd.Series, period: int = 14) -> pd.Series:
 
 
 def analyze_one(code: str, name: str, start: str, end: str,
-                 lookback: int, rebound_days: int,
-                 rebound_pct_min: float, rebound_pct_max: float,
-                 min_days_since_low: int, max_days_since_low: int) -> Optional[Dict]:
+                 lookback: int, rebound_days: int) -> Optional[Dict]:
     df = stock.get_market_ohlcv(start, end, code)
     if df is None or len(df) < lookback + 5:
         return None
@@ -61,16 +59,10 @@ def analyze_one(code: str, name: str, start: str, end: str,
     low_price = window.iloc[low_pos]
     low_date = window.index[low_pos]
     last_price = close.iloc[-1]
-    last_date = close.index[-1]
 
     # 거래일(영업일) 기준 경과일 - 캘린더 일수가 아닌 실제 거래일 수
     trading_days_since_low = (len(window) - 1) - low_pos
-    if trading_days_since_low < min_days_since_low or trading_days_since_low > max_days_since_low:
-        return None
-
     pct_from_low = (last_price - low_price) / low_price * 100
-    if pct_from_low < rebound_pct_min or pct_from_low > rebound_pct_max:
-        return None
 
     ma5 = close.rolling(5).mean()
     ma20 = close.rolling(20).mean()
@@ -106,6 +98,7 @@ def analyze_one(code: str, name: str, start: str, end: str,
         "low_price": int(low_price),
         "last_price": int(last_price),
         "pct_from_low": round(pct_from_low, 1),
+        "days_since_low": trading_days_since_low,
         "history": history,
         "golden_cross": golden_cross,
         "rsi_now": round(rsi_now, 1) if pd.notna(rsi_now) else None,
@@ -116,15 +109,10 @@ def analyze_one(code: str, name: str, start: str, end: str,
 
 
 def main():
-    parser = argparse.ArgumentParser(description="KOSPI 저점-반등 종목 스캐너 (JSON 출력)")
+    parser = argparse.ArgumentParser(description="KOSPI 저점-반등 종목 스캐너 (JSON 출력, 필터링은 앱에서 처리)")
     parser.add_argument("--top", type=int, default=100)
     parser.add_argument("--lookback", type=int, default=60)
     parser.add_argument("--rebound-days", type=int, default=10)
-    parser.add_argument("--rebound-pct-min", type=float, default=3.0, help="저점 대비 최소 반등률(%)")
-    parser.add_argument("--rebound-pct-max", type=float, default=8.0, help="저점 대비 최대 반등률(%) - 이미 많이 오른 종목 제외")
-    parser.add_argument("--min-days-since-low", type=int, default=2, help="저점 이후 최소 경과 거래일")
-    parser.add_argument("--max-days-since-low", type=int, default=5, help="저점 이후 최대 경과 거래일 - '초기' 반등만 포착")
-    parser.add_argument("--min-score", type=float, default=40.0)
     parser.add_argument("--out", type=str, default=None, help="CSV로도 저장하려면 파일명 지정")
     parser.add_argument("--json-out", type=str, default="data/results.json", help="JSON 결과 파일 경로")
     args = parser.parse_args()
@@ -141,12 +129,7 @@ def main():
     print(f"[2/3] 종목별 분석 중 (총 {len(universe)}개)...")
     for _, row in universe.iterrows():
         try:
-            res = analyze_one(
-                row["code"], row["name"], start, end,
-                args.lookback, args.rebound_days,
-                args.rebound_pct_min, args.rebound_pct_max,
-                args.min_days_since_low, args.max_days_since_low,
-            )
+            res = analyze_one(row["code"], row["name"], start, end, args.lookback, args.rebound_days)
             if res:
                 results.append(res)
         except Exception as e:
@@ -155,10 +138,9 @@ def main():
 
     df_result = pd.DataFrame(results)
     if not df_result.empty:
-        df_result = df_result[df_result["score"] >= args.min_score]
         df_result = df_result.sort_values("score", ascending=False)
 
-    print(f"[3/3] 결과 {len(df_result)}건")
+    print(f"[3/3] 결과 {len(df_result)}건 (필터링 없이 전체 저장 — 앱에서 토글로 선택)")
 
     if args.out:
         df_result.to_csv(args.out, index=False, encoding="utf-8-sig")
@@ -170,11 +152,6 @@ def main():
             "top": args.top,
             "lookback": args.lookback,
             "rebound_days": args.rebound_days,
-            "rebound_pct_min": args.rebound_pct_min,
-            "rebound_pct_max": args.rebound_pct_max,
-            "min_days_since_low": args.min_days_since_low,
-            "max_days_since_low": args.max_days_since_low,
-            "min_score": args.min_score,
         },
         "count": len(df_result),
         "candidates": df_result.to_dict(orient="records"),
