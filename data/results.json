@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17T06:31:56",
+  "generated_at": "2026-06-17T17:41:55",
   "params": {
     "top": 100,
     "lookback": 60,
@@ -314,7 +314,7 @@
         {
           "date": "2026-06-17",
           "close": 133100,
-          "volume": 5967437
+          "volume": 5967526
         }
       ],
       "golden_cross": true,
@@ -630,7 +630,7 @@
         {
           "date": "2026-06-17",
           "close": 1596000,
-          "volume": 937700
+          "volume": 937732
         }
       ],
       "golden_cross": false,
@@ -946,7 +946,7 @@
         {
           "date": "2026-06-17",
           "close": 490000,
-          "volume": 369973
+          "volume": 370049
         }
       ],
       "golden_cross": false,
@@ -1262,7 +1262,7 @@
         {
           "date": "2026-06-17",
           "close": 708000,
-          "volume": 197593
+          "volume": 197604
         }
       ],
       "golden_cross": true,
@@ -1578,7 +1578,7 @@
         {
           "date": "2026-06-17",
           "close": 3855000,
-          "volume": 32162
+          "volume": 32163
         }
       ],
       "golden_cross": true,
@@ -1894,7 +1894,7 @@
         {
           "date": "2026-06-17",
           "close": 679000,
-          "volume": 75619
+          "volume": 75621
         }
       ],
       "golden_cross": false,
@@ -2210,7 +2210,7 @@
         {
           "date": "2026-06-17",
           "close": 1120000,
-          "volume": 132962
+          "volume": 132964
         }
       ],
       "golden_cross": false,
@@ -2526,7 +2526,7 @@
         {
           "date": "2026-06-17",
           "close": 753000,
-          "volume": 95201
+          "volume": 95204
         }
       ],
       "golden_cross": false,
@@ -2842,7 +2842,7 @@
         {
           "date": "2026-06-17",
           "close": 52500,
-          "volume": 3680247
+          "volume": 3680804
         }
       ],
       "golden_cross": true,
@@ -3474,7 +3474,7 @@
         {
           "date": "2026-06-17",
           "close": 142400,
-          "volume": 247551
+          "volume": 247552
         }
       ],
       "golden_cross": true,
@@ -3790,7 +3790,7 @@
         {
           "date": "2026-06-17",
           "close": 319500,
-          "volume": 750011
+          "volume": 752108
         }
       ],
       "golden_cross": false,
@@ -4106,7 +4106,7 @@
         {
           "date": "2026-06-17",
           "close": 243500,
-          "volume": 1155056
+          "volume": 1155602
         }
       ],
       "golden_cross": false,
@@ -4738,7 +4738,7 @@
         {
           "date": "2026-06-17",
           "close": 41300,
-          "volume": 1800379
+          "volume": 1800432
         }
       ],
       "golden_cross": true,
@@ -5054,7 +5054,7 @@
         {
           "date": "2026-06-17",
           "close": 361000,
-          "volume": 188376
+          "volume": 188380
         }
       ],
       "golden_cross": true,
@@ -5370,7 +5370,7 @@
         {
           "date": "2026-06-17",
           "close": 40500,
-          "volume": 4127740
+          "volume": 4127751
         }
       ],
       "golden_cross": true,
@@ -5686,7 +5686,7 @@
         {
           "date": "2026-06-17",
           "close": 151500,
-          "volume": 168222
+          "volume": 168273
         }
       ],
       "golden_cross": true,
@@ -6002,7 +6002,7 @@
         {
           "date": "2026-06-17",
           "close": 22100,
-          "volume": 2899562
+          "volume": 2899739
         }
       ],
       "golden_cross": false,
@@ -6318,7 +6318,7 @@
         {
           "date": "2026-06-17",
           "close": 226500,
-          "volume": 2873717
+          "volume": 2882334
         }
       ],
       "golden_cross": false,
@@ -6634,7 +6634,7 @@
         {
           "date": "2026-06-17",
           "close": 631000,
-          "volume": 307927
+          "volume": 308035
         }
       ],
       "golden_cross": false,
@@ -6950,7 +6950,7 @@
         {
           "date": "2026-06-17",
           "close": 707000,
-          "volume": 340481
+          "volume": 340503
         }
       ],
       "golden_cross": false,
@@ -7266,7 +7266,7 @@
         {
           "date": "2026-06-17",
           "close": 234500,
-          "volume": 1259965
+          "volume": 1260211
         }
       ],
       "golden_cross": false,
@@ -7898,7 +7898,7 @@
         {
           "date": "2026-06-17",
           "close": 408500,
-          "volume": 210801
+          "volume": 210807
         }
       ],
       "golden_cross": false,
@@ -8214,7 +8214,7 @@
         {
           "date": "2026-06-17",
           "close": 950000,
-          "volume": 301811
+          "volume": 301817
         }
       ],
       "golden_cross": false,
@@ -8530,7 +8530,7 @@
         {
           "date": "2026-06-17",
           "close": 106200,
-          "volume": 483415
+          "volume": 483479
         }
       ],
       "golden_cross": false,
@@ -8846,7 +8846,7 @@
         {
           "date": "2026-06-17",
           "close": 92400,
-          "volume": 862840
+          "volume": 862924
         }
       ],
       "golden_cross": false,
@@ -9162,7 +9162,7 @@
         {
           "date": "2026-06-17",
           "close": 219000,
-          "volume": 452263
+          "volume": 452271
         }
       ],
       "golden_cross": false,
@@ -9478,7 +9478,7 @@
         {
           "date": "2026-06-17",
           "close": 126800,
-          "volume": 482589
+          "volume": 482592
         }
       ],
       "golden_cross": false,
@@ -9794,7 +9794,7 @@
         {
           "date": "2026-06-17",
           "close": 235500,
-          "volume": 338428
+          "volume": 338430
         }
       ],
       "golden_cross": true,
@@ -10110,7 +10110,7 @@
         {
           "date": "2026-06-17",
           "close": 240000,
-          "volume": 260613
+          "volume": 260644
         }
       ],
       "golden_cross": true,
@@ -10426,7 +10426,7 @@
         {
           "date": "2026-06-17",
           "close": 103100,
-          "volume": 1317600
+          "volume": 1317604
         }
       ],
       "golden_cross": false,
@@ -10742,7 +10742,7 @@
         {
           "date": "2026-06-17",
           "close": 72900,
-          "volume": 268407
+          "volume": 268457
         }
       ],
       "golden_cross": true,
@@ -11374,7 +11374,7 @@
         {
           "date": "2026-06-17",
           "close": 164000,
-          "volume": 1530127
+          "volume": 1530191
         }
       ],
       "golden_cross": false,
@@ -11690,7 +11690,7 @@
         {
           "date": "2026-06-17",
           "close": 22450,
-          "volume": 1026878
+          "volume": 1027053
         }
       ],
       "golden_cross": false,
@@ -12006,7 +12006,7 @@
         {
           "date": "2026-06-17",
           "close": 32150,
-          "volume": 1926338
+          "volume": 1926378
         }
       ],
       "golden_cross": false,
@@ -12322,7 +12322,7 @@
         {
           "date": "2026-06-17",
           "close": 23650,
-          "volume": 624404
+          "volume": 625016
         }
       ],
       "golden_cross": false,
@@ -12638,7 +12638,7 @@
         {
           "date": "2026-06-17",
           "close": 2032000,
-          "volume": 590419
+          "volume": 590565
         }
       ],
       "golden_cross": false,
@@ -12954,7 +12954,7 @@
         {
           "date": "2026-06-17",
           "close": 255000,
-          "volume": 731485
+          "volume": 731537
         }
       ],
       "golden_cross": false,
@@ -13270,7 +13270,7 @@
         {
           "date": "2026-06-17",
           "close": 251000,
-          "volume": 193873
+          "volume": 193876
         }
       ],
       "golden_cross": false,
@@ -13586,7 +13586,7 @@
         {
           "date": "2026-06-17",
           "close": 41150,
-          "volume": 9609687
+          "volume": 9617407
         }
       ],
       "golden_cross": false,
@@ -13902,7 +13902,7 @@
         {
           "date": "2026-06-17",
           "close": 24800,
-          "volume": 18902526
+          "volume": 18934116
         }
       ],
       "golden_cross": false,
@@ -14218,7 +14218,7 @@
         {
           "date": "2026-06-17",
           "close": 232500,
-          "volume": 245942
+          "volume": 245970
         }
       ],
       "golden_cross": false,
@@ -14534,7 +14534,7 @@
         {
           "date": "2026-06-17",
           "close": 691000,
-          "volume": 64501
+          "volume": 64520
         }
       ],
       "golden_cross": false,
@@ -14850,7 +14850,7 @@
         {
           "date": "2026-06-17",
           "close": 123900,
-          "volume": 340247
+          "volume": 340249
         }
       ],
       "golden_cross": false,
@@ -15482,7 +15482,7 @@
         {
           "date": "2026-06-17",
           "close": 618000,
-          "volume": 890912
+          "volume": 891039
         }
       ],
       "golden_cross": false,
@@ -15798,7 +15798,7 @@
         {
           "date": "2026-06-17",
           "close": 1248000,
-          "volume": 317066
+          "volume": 317100
         }
       ],
       "golden_cross": false,
@@ -16114,7 +16114,7 @@
         {
           "date": "2026-06-17",
           "close": 447000,
-          "volume": 342060
+          "volume": 342073
         }
       ],
       "golden_cross": false,
@@ -16430,7 +16430,7 @@
         {
           "date": "2026-06-17",
           "close": 550000,
-          "volume": 257967
+          "volume": 257980
         }
       ],
       "golden_cross": false,
@@ -16746,7 +16746,7 @@
         {
           "date": "2026-06-17",
           "close": 139300,
-          "volume": 931024
+          "volume": 931255
         }
       ],
       "golden_cross": false,
@@ -17378,7 +17378,7 @@
         {
           "date": "2026-06-17",
           "close": 122600,
-          "volume": 75883
+          "volume": 75894
         }
       ],
       "golden_cross": false,
@@ -17694,7 +17694,7 @@
         {
           "date": "2026-06-17",
           "close": 13770,
-          "volume": 3780180
+          "volume": 3785458
         }
       ],
       "golden_cross": false,
@@ -18326,7 +18326,7 @@
         {
           "date": "2026-06-17",
           "close": 124000,
-          "volume": 923444
+          "volume": 923534
         }
       ],
       "golden_cross": false,
@@ -18958,7 +18958,7 @@
         {
           "date": "2026-06-17",
           "close": 28800,
-          "volume": 2094767
+          "volume": 2095522
         }
       ],
       "golden_cross": false,
@@ -19274,7 +19274,7 @@
         {
           "date": "2026-06-17",
           "close": 155900,
-          "volume": 430517
+          "volume": 430602
         }
       ],
       "golden_cross": false,
@@ -19590,7 +19590,7 @@
         {
           "date": "2026-06-17",
           "close": 155600,
-          "volume": 578179
+          "volume": 578194
         }
       ],
       "golden_cross": false,
@@ -19906,7 +19906,7 @@
         {
           "date": "2026-06-17",
           "close": 166300,
-          "volume": 585294
+          "volume": 585295
         }
       ],
       "golden_cross": false,
@@ -20538,7 +20538,7 @@
         {
           "date": "2026-06-17",
           "close": 1224000,
-          "volume": 290545
+          "volume": 290565
         }
       ],
       "golden_cross": false,
@@ -20854,7 +20854,7 @@
         {
           "date": "2026-06-17",
           "close": 105300,
-          "volume": 823104
+          "volume": 823123
         }
       ],
       "golden_cross": false,
@@ -21170,7 +21170,7 @@
         {
           "date": "2026-06-17",
           "close": 114300,
-          "volume": 171044
+          "volume": 171054
         }
       ],
       "golden_cross": false,
@@ -21802,7 +21802,7 @@
         {
           "date": "2026-06-17",
           "close": 103200,
-          "volume": 2408123
+          "volume": 2408504
         }
       ],
       "golden_cross": false,
@@ -22118,7 +22118,7 @@
         {
           "date": "2026-06-17",
           "close": 2521000,
-          "volume": 3749270
+          "volume": 3753054
         }
       ],
       "golden_cross": false,
@@ -22434,7 +22434,7 @@
         {
           "date": "2026-06-17",
           "close": 99000,
-          "volume": 773616
+          "volume": 773704
         }
       ],
       "golden_cross": false,
@@ -22750,7 +22750,7 @@
         {
           "date": "2026-06-17",
           "close": 112500,
-          "volume": 396936
+          "volume": 396947
         }
       ],
       "golden_cross": false,
@@ -23066,7 +23066,7 @@
         {
           "date": "2026-06-17",
           "close": 174200,
-          "volume": 1023091
+          "volume": 1024169
         }
       ],
       "golden_cross": false,
@@ -23382,7 +23382,7 @@
         {
           "date": "2026-06-17",
           "close": 158500,
-          "volume": 426027
+          "volume": 426325
         }
       ],
       "golden_cross": false,
@@ -23698,7 +23698,7 @@
         {
           "date": "2026-06-17",
           "close": 1624000,
-          "volume": 85515
+          "volume": 85521
         }
       ],
       "golden_cross": false,
@@ -24014,7 +24014,7 @@
         {
           "date": "2026-06-17",
           "close": 346500,
-          "volume": 17945020
+          "volume": 17955897
         }
       ],
       "golden_cross": false,
@@ -24646,7 +24646,7 @@
         {
           "date": "2026-06-17",
           "close": 28950,
-          "volume": 5928620
+          "volume": 5929084
         }
       ],
       "golden_cross": false,
@@ -24962,7 +24962,7 @@
         {
           "date": "2026-06-17",
           "close": 384500,
-          "volume": 308207
+          "volume": 308208
         }
       ],
       "golden_cross": false,
@@ -25278,7 +25278,7 @@
         {
           "date": "2026-06-17",
           "close": 416000,
-          "volume": 224002
+          "volume": 224023
         }
       ],
       "golden_cross": false,
@@ -26226,7 +26226,7 @@
         {
           "date": "2026-06-17",
           "close": 209500,
-          "volume": 146565
+          "volume": 146612
         }
       ],
       "golden_cross": false,
@@ -26542,7 +26542,7 @@
         {
           "date": "2026-06-17",
           "close": 453500,
-          "volume": 35688
+          "volume": 35691
         }
       ],
       "golden_cross": false,
@@ -27174,7 +27174,7 @@
         {
           "date": "2026-06-17",
           "close": 262500,
-          "volume": 133983
+          "volume": 133998
         }
       ],
       "golden_cross": false,
@@ -27806,7 +27806,7 @@
         {
           "date": "2026-06-17",
           "close": 1370000,
-          "volume": 60215
+          "volume": 60218
         }
       ],
       "golden_cross": false,
@@ -28122,7 +28122,7 @@
         {
           "date": "2026-06-17",
           "close": 1261000,
-          "volume": 13188
+          "volume": 13193
         }
       ],
       "golden_cross": false,
@@ -28754,7 +28754,7 @@
         {
           "date": "2026-06-17",
           "close": 174600,
-          "volume": 500724
+          "volume": 500727
         }
       ],
       "golden_cross": false,
@@ -29386,7 +29386,7 @@
         {
           "date": "2026-06-17",
           "close": 59700,
-          "volume": 799367
+          "volume": 799368
         }
       ],
       "golden_cross": false,
@@ -29702,7 +29702,7 @@
         {
           "date": "2026-06-17",
           "close": 247000,
-          "volume": 129077
+          "volume": 129078
         }
       ],
       "golden_cross": false,
@@ -30018,7 +30018,7 @@
         {
           "date": "2026-06-17",
           "close": 1145000,
-          "volume": 42633
+          "volume": 42636
         }
       ],
       "golden_cross": false,
@@ -30334,7 +30334,7 @@
         {
           "date": "2026-06-17",
           "close": 248000,
-          "volume": 122745
+          "volume": 122921
         }
       ],
       "golden_cross": false,
@@ -30650,7 +30650,7 @@
         {
           "date": "2026-06-17",
           "close": 40550,
-          "volume": 1133068
+          "volume": 1133103
         }
       ],
       "golden_cross": false,
@@ -30966,7 +30966,7 @@
         {
           "date": "2026-06-17",
           "close": 109000,
-          "volume": 455951
+          "volume": 456434
         }
       ],
       "golden_cross": false,
@@ -31598,7 +31598,7 @@
         {
           "date": "2026-06-17",
           "close": 50400,
-          "volume": 2141292
+          "volume": 2141472
         }
       ],
       "golden_cross": false,
