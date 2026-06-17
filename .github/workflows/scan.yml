@@ -2,6 +2,7 @@ name: KOSPI 저점-반등 스캔
 
 on:
   schedule:
+    # UTC 07:00 = KST 16:00 (평일, 장마감 후) — GitHub 스케줄은 다소 지연될 수 있음
     - cron: "0 7 * * 1-5"
   workflow_dispatch: {}
 
@@ -31,11 +32,6 @@ jobs:
           python scanner.py \
             --top 100 \
             --lookback 60 \
-            --rebound-pct-min 3 \
-            --rebound-pct-max 20 \
-            --min-days-since-low 1 \
-            --max-days-since-low 15 \
-            --min-score 20 \
             --json-out data/results.json
 
       - name: 결과 커밋 및 푸시
