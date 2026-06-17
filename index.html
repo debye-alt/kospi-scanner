@@ -437,24 +437,41 @@
       return '<div class="chart-empty">차트 데이터가 없습니다.<br/>다음 스캔 이후부터 표시됩니다.</div>';
     }
 
-    const W = 320, H = 130, PAD = 6, TOP = 10, BOTTOM = 22;
+    const W = 320, H = 168, PAD = 6;
+    const PRICE_TOP = 6, PRICE_H = 84;
+    const PRICE_BOTTOM = PRICE_TOP + PRICE_H;
+    const VOL_TOP = PRICE_BOTTOM + 12, VOL_H = 38;
+    const VOL_BOTTOM = VOL_TOP + VOL_H;
+    const LABEL_Y = VOL_BOTTOM + 14;
+
+    const n = history.length;
+    const stepX = (W - PAD * 2) / (n - 1);
+    const xAt = i => PAD + stepX * i;
+
     const prices = history.map(h => h.close);
     const min = Math.min(...prices);
     const max = Math.max(...prices);
     const range = (max - min) || 1;
-    const innerH = H - TOP - BOTTOM;
-    const n = history.length;
-    const stepX = (W - PAD * 2) / (n - 1);
+    const yAt = v => PRICE_TOP + PRICE_H - ((v - min) / range) * PRICE_H;
 
-    const xAt = i => PAD + stepX * i;
-    const yAt = v => TOP + innerH - ((v - min) / range) * innerH;
+    const volumes = history.map(h => h.volume || 0);
+    const maxVol = Math.max(...volumes, 1);
+    const barW = Math.max(1.2, stepX * 0.6);
 
     const points = history.map((h, i) => `${xAt(i).toFixed(1)},${yAt(h.close).toFixed(1)}`).join(' ');
-    const areaPath = `M${xAt(0).toFixed(1)},${(TOP + innerH).toFixed(1)} L${points.split(' ').join(' L')} L${xAt(n - 1).toFixed(1)},${(TOP + innerH).toFixed(1)} Z`;
+    const areaPath = `M${xAt(0).toFixed(1)},${PRICE_BOTTOM.toFixed(1)} L${points.split(' ').join(' L')} L${xAt(n - 1).toFixed(1)},${PRICE_BOTTOM.toFixed(1)} Z`;
 
     let lowIdx = 0;
     for (let i = 1; i < history.length; i++) if (history[i].close < history[lowIdx].close) lowIdx = i;
     const lastIdx = n - 1;
+
+    const volBars = history.map((h, i) => {
+      const bh = (volumes[i] / maxVol) * VOL_H;
+      const x = (xAt(i) - barW / 2).toFixed(1);
+      const y = (VOL_BOTTOM - bh).toFixed(1);
+      const isLast = i === lastIdx;
+      return `<rect x="${x}" y="${y}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" fill="${isLast ? 'rgba(255,201,61,0.6)' : 'rgba(124,135,148,0.45)'}"></rect>`;
+    }).join('');
 
     const fmtMD = (iso) => {
       const d = new Date(iso);
@@ -463,13 +480,16 @@
 
     return `
       <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <text class="chart-label" x="${PAD}" y="${(VOL_TOP - 3).toFixed(1)}" text-anchor="start">거래량</text>
+        <line x1="${PAD}" y1="${PRICE_BOTTOM.toFixed(1)}" x2="${W - PAD}" y2="${PRICE_BOTTOM.toFixed(1)}" stroke="rgba(255,255,255,0.07)" stroke-width="1"></line>
         <path d="${areaPath}" fill="rgba(255,77,77,0.10)" stroke="none"></path>
+        ${volBars}
         <polyline points="${points}" fill="none" stroke="#ff4d4d" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"></polyline>
         <circle cx="${xAt(lowIdx).toFixed(1)}" cy="${yAt(history[lowIdx].close).toFixed(1)}" r="3" fill="#4d8dff"></circle>
         <circle cx="${xAt(lastIdx).toFixed(1)}" cy="${yAt(history[lastIdx].close).toFixed(1)}" r="3.2" fill="#ffc93d"></circle>
-        <text class="chart-label" x="${xAt(lowIdx).toFixed(1)}" y="${(H - 6).toFixed(1)}" text-anchor="middle">저점 ${fmtMD(history[lowIdx].date)}</text>
-        <text class="chart-label" x="${xAt(0).toFixed(1)}" y="${(H - 6).toFixed(1)}" text-anchor="start">${fmtMD(history[0].date)}</text>
-        <text class="chart-label" x="${xAt(lastIdx).toFixed(1)}" y="${(H - 6).toFixed(1)}" text-anchor="end">${fmtMD(history[lastIdx].date)}</text>
+        <text class="chart-label" x="${xAt(lowIdx).toFixed(1)}" y="${LABEL_Y.toFixed(1)}" text-anchor="middle">저점 ${fmtMD(history[lowIdx].date)}</text>
+        <text class="chart-label" x="${xAt(0).toFixed(1)}" y="${LABEL_Y.toFixed(1)}" text-anchor="start">${fmtMD(history[0].date)}</text>
+        <text class="chart-label" x="${xAt(lastIdx).toFixed(1)}" y="${LABEL_Y.toFixed(1)}" text-anchor="end">${fmtMD(history[lastIdx].date)}</text>
       </svg>
     `;
   }

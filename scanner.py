@@ -53,8 +53,10 @@ def analyze_one(code: str, name: str, start: str, end: str,
 
     df = df.rename(columns={"종가": "close", "거래량": "volume"})
     close = df["close"]
+    vol = df["volume"]
 
     window = close.iloc[-lookback:]
+    vol_window = vol.iloc[-lookback:]
     low_pos = int(np.argmin(window.values))          # 저점의 거래일 위치
     low_price = window.iloc[low_pos]
     low_date = window.index[low_pos]
@@ -74,7 +76,6 @@ def analyze_one(code: str, name: str, start: str, end: str,
     rsi_min_recent = rsi.iloc[-lookback:].min()
     rsi_recovering = bool(pd.notna(rsi_min_recent) and rsi_min_recent < 35 and rsi_now > rsi_min_recent + 5)
 
-    vol = df["volume"]
     vol_recent = vol.iloc[-rebound_days:].mean()
     vol_before = vol.iloc[-lookback:-rebound_days].mean()
     volume_up = bool(vol_before > 0 and vol_recent > vol_before * 1.1)
@@ -85,10 +86,10 @@ def analyze_one(code: str, name: str, start: str, end: str,
     score += 20 if rsi_recovering else 0
     score += 10 if volume_up else 0
 
-    # 차트용 가격 히스토리 (저점 탐색 구간과 동일 범위)
+    # 차트용 가격+거래량 히스토리 (저점 탐색 구간과 동일 범위)
     history = [
-        {"date": d.strftime("%Y-%m-%d"), "close": int(v)}
-        for d, v in window.items()
+        {"date": d.strftime("%Y-%m-%d"), "close": int(c), "volume": int(v)}
+        for d, c, v in zip(window.index, window.values, vol_window.values)
     ]
 
     return {
